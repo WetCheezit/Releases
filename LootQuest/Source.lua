@@ -170,7 +170,7 @@ do
             end)
             
             for i,v in pairs(game.Players.LocalPlayer.PlayerFolder.Swords:GetChildren()) do
-                if (v.Name == tostring(Swords[1])) then
+                if (v.Name == tostring(Swords[1]) and SwordUtility.CalculateDamage(v:GetAttributes()) == Values[1]) then
                     game:GetService("ReplicatedStorage").Remotes.EquipSword:InvokeServer(v)
                 end
             end
