@@ -25,6 +25,7 @@ local Misc = MainWindow:AddFolder("Miscellaneous")
 local Settings = MainWindow:AddFolder("Settings")
 
 AutoFarm:AddToggle({text = "Enabled", flag = "autofarm"})
+AutoFarm:AddToggle({text = "Auto swing", flag = "autoswing"})
 AutoFarm:AddBox({text = "Target", flag = "target", value = "Bandit"})
 AutoFarm:AddList({text = "Zone", flag = "zone", values = Zones})
 AutoFarm:AddSlider({text = "Tween speed", flag = "tweenspeed", value = 15, min = 10, max = 17.5, float = 0.1})
@@ -85,30 +86,33 @@ RunService.Stepped:Connect(function()
             if (Character.HumanoidRootPart) then
                 local TargetPosition = Target.HumanoidRootPart.Position
                 local TweenInfo = TweenInfo.new(Distance / Library.flags.tweenspeed, Enum.EasingStyle.Linear)
-                    
-                if (Character.HumanoidRootPart) then
-                    for i,v in pairs(LocalPlayer.Backpack:GetChildren()) do
-                        if (v:IsA("Tool")) then
-                            if (Character.Humanoid) then
-                                Character.Humanoid:EquipTool(v)
-                            end
-                        end
-                    end
-                                
-                    for i,v in pairs(Character:GetChildren()) do
-                        if (v:IsA("Tool")) then
-                            v:Activate()
-                        end
-                    end
 
-                    if (Character.HumanoidRootPart) then
-                        local Tween = TweenService:Create(Character:WaitForChild("HumanoidRootPart"), TweenInfo, {
-                            CFrame = CFrame.new(TargetPosition.X, TargetPosition.Y, TargetPosition.Z) * CFrame.new(0, 0, 5)
-                        })
+                if (Character.HumanoidRootPart) then
+                    local Tween = TweenService:Create(Character:WaitForChild("HumanoidRootPart"), TweenInfo, {
+                        CFrame = CFrame.new(TargetPosition.X, TargetPosition.Y, TargetPosition.Z) * CFrame.new(0, 0, 5)
+                    })
                         
-                        Tween:Play()
-                    end
+                    Tween:Play()
                 end
+            end
+        end
+    end
+end)
+
+-- Auto swing
+RunService.Stepped:Connect(function()
+    if (Library.flags.autoswing and Character.HumanoidRootPart) then
+        for i,v in pairs(LocalPlayer.Backpack:GetChildren()) do
+            if (v:IsA("Tool")) then
+                if (Character.Humanoid) then
+                    Character.Humanoid:EquipTool(v)
+                end
+            end
+        end
+                    
+        for i,v in pairs(Character:GetChildren()) do
+            if (v:IsA("Tool")) then
+                v:Activate()
             end
         end
     end
