@@ -101,7 +101,7 @@ end)
 
 -- Auto swing
 RunService.Stepped:Connect(function()
-    if (Library.flags.autoswing and Character.HumanoidRootPart) then
+    if (Character and Character.HumanoidRootPart) then
         for i,v in pairs(LocalPlayer.Backpack:GetChildren()) do
             if (v:IsA("Tool")) then
                 if (Character.Humanoid) then
@@ -111,8 +111,10 @@ RunService.Stepped:Connect(function()
         end
                     
         for i,v in pairs(Character:GetChildren()) do
-            if (v:IsA("Tool")) then
+            if (Library.flags.autoswing and v:IsA("Tool")) then
                 v:Activate()
+            elseif (not Library.flags.autoswing and v:IsA("Tool")) then
+                v:Deactivate()
             end
         end
     end
@@ -151,7 +153,7 @@ do
     local Values, Swords = {}, {}
     local SwordUtility = require(game.ReplicatedStorage.Utility.SwordUtil)
 
-    while wait(0.1) do
+    while wait(1) do
         if (Library.flags.autosell and Character and Character.HumanoidRootPart) then
             firetouchinterest(game:GetService("Workspace").Zones.Forest.Sell, Character.HumanoidRootPart, 0)
             firetouchinterest(game:GetService("Workspace").Zones.Forest.Sell, Character.HumanoidRootPart, 1)
@@ -182,6 +184,7 @@ do
     end
 end
 
+-- Anti afk
 for i,v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
     v:Disable()
 end
