@@ -32,7 +32,6 @@ AutoFarm:AddSlider({text = "Tween speed", flag = "tweenspeed", value = 15, min =
 Misc:AddToggle({text = "Auto sell", flag = "autosell"})
 Misc:AddToggle({text = "Auto fuse swords", flag = "fuseswords"})
 Misc:AddToggle({text = "Auto equip best sword", flag = "equipbest"})
-Misc:AddToggle({text = "Auto upgrade storage", flag = "upgradestorage"})
 
 Settings:AddBind({text = "Open / Close", key = "RightShift", callback = function() Library:Close() end})
 Settings:AddButton({text = "Copy discord invite", callback = function() setclipboard("https://discord.gg/VCSAgMp7bS") end})
@@ -173,14 +172,6 @@ do
             for i,v in pairs(game.Players.LocalPlayer.PlayerFolder.Swords:GetChildren()) do
                 if (v.Name == tostring(Swords[1])) then
                     game:GetService("ReplicatedStorage").Remotes.EquipSword:InvokeServer(v)
-                end
-            end
-        end
-        
-        if (Library.flags.upgradestorage) then
-            for i,v in pairs(game:GetService("ReplicatedStorage").Storage:GetChildren()) do
-                if (v.Name ~= "Infinite") then
-                    game:GetService("ReplicatedStorage").Remotes.BuyStorage:FireServer(v.Name)
                 end
             end
         end
