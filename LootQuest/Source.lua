@@ -148,6 +148,11 @@ RunService.Stepped:Connect(function()
     end
 end)
 
+-- Anti afk
+for i,v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
+    v:Disable()
+end
+
 -- Misc
 do
     local Values, Swords = {}, {}
@@ -182,9 +187,4 @@ do
             end
         end
     end
-end
-
--- Anti afk
-for i,v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
-    v:Disable()
 end
