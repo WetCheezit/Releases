@@ -78,18 +78,19 @@ end
 -- Auto farm
 RunService.Stepped:Connect(function()
     Character = LocalPlayer.Character
-    if (Library.flags.autofarm and Character ~= nil and IsAlive(LocalPlayer)) then
+    
+    if (Library.flags.autofarm and Character and IsAlive(LocalPlayer)) then
         local Target, Distance = GetClosest(Library.flags.zone, Library.flags.target)
             
-        if (Target and Target.HumanoidRootPart ~= nil) then
-            if (Character.HumanoidRootPart ~= nil) then
+        if (Target and Target.HumanoidRootPart) then
+            if (Character.HumanoidRootPart) then
                 local TargetPosition = Target.HumanoidRootPart.Position
                 local TweenInfo = TweenInfo.new(Distance / Library.flags.tweenspeed, Enum.EasingStyle.Linear)
                     
-                if (Character.HumanoidRootPart ~= nil) then
+                if (Character.HumanoidRootPart) then
                     for i,v in pairs(LocalPlayer.Backpack:GetChildren()) do
                         if (v:IsA("Tool")) then
-                            if (Character.Humanoid ~= nil) then
+                            if (Character.Humanoid) then
                                 Character.Humanoid:EquipTool(v)
                             end
                         end
@@ -101,7 +102,7 @@ RunService.Stepped:Connect(function()
                         end
                     end
 
-                    if (Character.HumanoidRootPart ~= nil) then
+                    if (Character.HumanoidRootPart) then
                         local Tween = TweenService:Create(Character:WaitForChild("HumanoidRootPart"), TweenInfo, {
                             CFrame = CFrame.new(TargetPosition.X, TargetPosition.Y, TargetPosition.Z) * CFrame.new(0, 0, 5)
                         })
@@ -117,7 +118,7 @@ end)
 -- Body velocity
 RunService.Stepped:Connect(function()
     if (Library.flags.autofarm) then
-        if (Character and Character:FindFirstChild("HumanoidRootPart") ~= nil and IsAlive(LocalPlayer)) then
+        if (Character and Character:FindFirstChild("HumanoidRootPart") and IsAlive(LocalPlayer)) then
             local BodyVelocity = Instance.new("BodyVelocity", Character:WaitForChild("HumanoidRootPart"))
 
             BodyVelocity.Velocity = Vector3.new(0, 0, 0)
@@ -134,7 +135,7 @@ RunService.Stepped:Connect(function()
     if (Character ~= nil and IsAlive(LocalPlayer)) then
         for i,v in pairs(Character:GetChildren()) do
             if (v:IsA("MeshPart") or v:IsA("BasePart")) then
-                if (v ~= nil) then
+                if (v) then
                     v.CanCollide = not Library.flags.autofarm
                 end
             end
