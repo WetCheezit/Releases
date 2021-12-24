@@ -25,10 +25,13 @@ local Misc = MainWindow:AddFolder("Miscellaneous")
 local Settings = MainWindow:AddFolder("Settings")
 
 AutoFarm:AddToggle({text = "Enabled", flag = "autofarm"})
+AutoFarm:AddToggle({text = "Pickup gifts", flag = "autogifts"})
 AutoFarm:AddToggle({text = "Auto swing", flag = "autoswing"})
 AutoFarm:AddBox({text = "Target", flag = "target", value = "Bandit"})
 AutoFarm:AddList({text = "Zone", flag = "zone", values = Zones})
 AutoFarm:AddSlider({text = "Tween speed", flag = "tweenspeed", value = 15, min = 10, max = 17.5, float = 0.1})
+AutoFarm:AddLabel({text = 'Turn off "Enabled" for'})
+AutoFarm:AddLabel({text = "auto gift to work"})
 
 Misc:AddToggle({text = "Auto sell", flag = "autosell"})
 Misc:AddToggle({text = "Auto fuse swords", flag = "fuseswords"})
@@ -73,6 +76,50 @@ local function GetClosest(Zone, Enemy)
     end
     
     return Target, Closest
+end
+
+local function GetClosestGift()
+    local Target, Closest = nil, math.huge
+
+    for i,v in pairs(workspace.Zones:GetChildren()) do
+        if (v) then
+            for i2,v2 in pairs(v.GiftSpawners:GetChildren()) do
+                if (v2.Name == "Gift Spawn" and v2:FindFirstChild("Gift")) then
+                    if (v2.Gift.ProximityPrompt and v2.Gift.Transparency == 0) then
+                        local Distance = (v2.Gift.Position - Character.HumanoidRootPart.Position).Magnitude
+
+                        if (Distance < Closest) then
+                            Closest = Distance
+                            Target = v2
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return Target, Closest
+end
+
+-- fireproximityprompt function made by sowd
+local function FirePrompt(Obj, Amount, Skip)
+    if (Obj.ClassName == "ProximityPrompt") then 
+        Amount = Amount or 1
+        local PromptTime = Obj.HoldDuration
+        if (Skip) then 
+            Obj.HoldDuration = 0
+        end
+        for i = 1, Amount do 
+            Obj:InputHoldBegin()
+            if (not Skip) then 
+                wait(Obj.HoldDuration)
+            end
+            Obj:InputHoldEnd()
+        end
+        Obj.HoldDuration = PromptTime
+    else 
+        error("userdata<ProximityPrompt> expected")
+    end
 end
 
 -- Auto farm
@@ -122,7 +169,7 @@ end)
 
 -- Body velocity
 RunService.Stepped:Connect(function()
-    if (Library.flags.autofarm) then
+    if (Library.flags.autofarm or Library.flags.autogifts) then
         if (Character and Character:FindFirstChild("HumanoidRootPart") and IsAlive(LocalPlayer)) then
             local BodyVelocity = Instance.new("BodyVelocity", Character:WaitForChild("HumanoidRootPart"))
 
@@ -135,20 +182,39 @@ RunService.Stepped:Connect(function()
     end
 end)
 
+RunService.Stepped:Connect(function()
+    local GiftSpawn, Distance = GetClosestGift()
+    
+    if (Library.flags.autogifts) then
+        if (Character and Character.HumanoidRootPart and IsAlive(LocalPlayer) and GiftSpawn and GiftSpawn.Gift) then
+            local GiftPosition = GiftSpawn.Gift.Position
+            local TweenInfo = TweenInfo.new(Distance / Library.flags.tweenspeed, Enum.EasingStyle.Linear)
+
+            local Tween = TweenService:Create(Character.HumanoidRootPart, TweenInfo, {
+                CFrame = CFrame.new(GiftPosition.X, GiftPosition.Y, GiftPosition.Z)
+            })
+
+            Tween:Play()
+            FirePrompt(GiftSpawn.Gift.ProximityPrompt, 3, true)
+        end
+    end
+end)
+
 -- Noclip
 RunService.Stepped:Connect(function()
     if (Character ~= nil and IsAlive(LocalPlayer)) then
         for i,v in pairs(Character:GetChildren()) do
             if (v:IsA("MeshPart") or v:IsA("BasePart")) then
-                if (v) then
-                    v.CanCollide = not Library.flags.autofarm
+                if (v and Library.flags.autofarm or Library.flags.autogifts) then
+                    v.CanCollide = false
+                else
+                    v.CanCollide = true
                 end
             end
         end
     end
 end)
 
--- Anti afk
 for i,v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
     v:Disable()
 end
