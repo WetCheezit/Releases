@@ -84,13 +84,17 @@ local function GetClosestGift()
     for i,v in pairs(workspace.Zones:GetChildren()) do
         if (v) then
             for i2,v2 in pairs(v.GiftSpawners:GetChildren()) do
-                if (v2.Name == "Gift Spawn" and v2:FindFirstChild("Gift")) then
-                    if (v2.Gift.ProximityPrompt and v2.Gift.Transparency == 0) then
-                        local Distance = (v2.Gift.Position - Character.HumanoidRootPart.Position).Magnitude
+                if (v2.Name == "Gift Spawn") then
+                    for _, Gift in pairs(v2:GetChildren()) do
+                        if (Gift and Gift.Name:find("Gift")) then
+                            if (Gift and Gift.ProximityPrompt and Gift.Transparency == 0) then
+                                local Distance = (Gift.Position - Character.HumanoidRootPart.Position).Magnitude
 
-                        if (Distance < Closest) then
-                            Closest = Distance
-                            Target = v2
+                                if (Distance < Closest) then
+                                    Closest = Distance
+                                    Target = Gift
+                                end
+                            end
                         end
                     end
                 end
@@ -183,11 +187,11 @@ RunService.Stepped:Connect(function()
 end)
 
 RunService.Stepped:Connect(function()
-    local GiftSpawn, Distance = GetClosestGift()
+    local Gift, Distance = GetClosestGift()
     
     if (Library.flags.autogifts) then
-        if (Character and Character.HumanoidRootPart and IsAlive(LocalPlayer) and GiftSpawn and GiftSpawn.Gift) then
-            local GiftPosition = GiftSpawn.Gift.Position
+        if (Character and Character.HumanoidRootPart and IsAlive(LocalPlayer) and Gift) then
+            local GiftPosition = Gift.Position
             local TweenInfo = TweenInfo.new(Distance / Library.flags.tweenspeed, Enum.EasingStyle.Linear)
 
             local Tween = TweenService:Create(Character.HumanoidRootPart, TweenInfo, {
@@ -195,7 +199,7 @@ RunService.Stepped:Connect(function()
             })
 
             Tween:Play()
-            FirePrompt(GiftSpawn.Gift.ProximityPrompt, 3, true)
+            FirePrompt(Gift.ProximityPrompt, 1, true)
         end
     end
 end)
