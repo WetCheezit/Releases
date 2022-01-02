@@ -1,9 +1,3 @@
-getgenv().Settings = {
-    Fov = 150,
-    Hitbox = "Head",
-    FovCircle = true,
-}
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
