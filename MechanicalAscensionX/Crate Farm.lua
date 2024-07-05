@@ -34,7 +34,7 @@ runService.Stepped:Connect(function()
     if (globalEnv.Enabled) then
         local crate, distance = getClosestCrate();
 
-        if (crate) then
+        if (crate and crate:FindFirstChild("smiley")) then
             local tweenInfo = TweenInfo.new(distance / 75, Enum.EasingStyle.Linear);
             local tween = tweenService:Create(humanoidRootPart, tweenInfo, { CFrame = CFrame.new(crate.Position) });
 
