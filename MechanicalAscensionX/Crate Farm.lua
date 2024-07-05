@@ -18,15 +18,11 @@ local function getClosestCrate()
 
     for _, crate in next, crates:GetChildren() do
         if (crate) then
-            local smileyDecal = crate:FindFirstChild("smiley");
+            local distance = (humanoidRootPart.Position - crate.Position).Magnitude;
 
-            if (smileyDecal) then
-                local distance = (humanoidRootPart.Position - crate.Position).Magnitude;
-
-                if (distance < closest) then
-                    target = crate;
-                    closest = distance;
-                end
+            if (distance < closest) then
+                target = crate;
+                closest = distance;
             end
         end
     end
