@@ -30,7 +30,7 @@ local function getClosestCrate()
     return target, closest;
 end
 
-runService.Stepped:Connct(function()
+runService.Stepped:Connect(function()
     if (globalEnv.Enabled) then
         local crate, distance = getClosestCrate();
 
