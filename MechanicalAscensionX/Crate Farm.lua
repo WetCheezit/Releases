@@ -18,11 +18,15 @@ local function getClosestCrate()
 
     for _, crate in next, crates:GetChildren() do
         if (crate) then
-            local distance = (humanoidRootPart.Position - crate.Position).Magnitude;
+            local smileyDecal = crate:FindFirstChild("smiley");
 
-            if (distance < closest) then
-                target = crate;
-                closest = distance;
+            if (smileyDecal) then
+                local distance = (humanoidRootPart.Position - crate.Position).Magnitude;
+
+                if (distance < closest) then
+                    target = crate;
+                    closest = distance;
+                end
             end
         end
     end
@@ -34,7 +38,7 @@ runService.Stepped:Connect(function()
     if (globalEnv.Enabled) then
         local crate, distance = getClosestCrate();
 
-        if (crate and crate:FindFirstChild("smiley")) then
+        if (crate) then
             local tweenInfo = TweenInfo.new(distance / 75, Enum.EasingStyle.Linear);
             local tween = tweenService:Create(humanoidRootPart, tweenInfo, { CFrame = CFrame.new(crate.Position) });
 
