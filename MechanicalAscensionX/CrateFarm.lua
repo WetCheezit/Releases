@@ -17,7 +17,7 @@ local function getClosestCrate()
     local target, closest = nil, globalEnv.maxDistance
 
     for _, crate in next, crates:GetChildren() do
-        if (crate and crate.Transparency == 0) then
+        if (crate) then
             local distance = (humanoidRootPart.Position - crate.Position).Magnitude;
 
             if (distance < closest) then
