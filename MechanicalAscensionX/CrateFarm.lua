@@ -54,7 +54,7 @@ runService.Stepped:Connect(function()
 
     for _, part in next, character:GetChildren() do
         if (part:IsA("BasePart")) then
-            part.CanCollide = not globalEnv.Enabled;
+            part.CanCollide = not globalEnv.enabled;
         end
     end
 end)
