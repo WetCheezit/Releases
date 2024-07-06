@@ -31,11 +31,11 @@ local function getClosestCrate()
 end
 
 runService.Stepped:Connect(function()
-    if (globalEnv.Enabled) then
+    if (globalEnv.enabled) then
         local crate, distance = getClosestCrate();
 
         if (crate) then
-            local tweenInfo = TweenInfo.new(distance / 75, Enum.EasingStyle.Linear);
+            local tweenInfo = TweenInfo.new(distance / globalEnv.teleportSpeed, Enum.EasingStyle.Linear);
             local tween = tweenService:Create(humanoidRootPart, tweenInfo, { CFrame = CFrame.new(crate.Position) });
 
             if (not humanoidRootPart:FindFirstChild("BodyVelocity")) then
@@ -54,7 +54,7 @@ runService.Stepped:Connect(function()
 
     for _, part in next, character:GetChildren() do
         if (part:IsA("BasePart")) then
-            part.CanCollide = not globalEnv.Enabled;
+            part.CanCollide = not globalEnv.enabled;
         end
     end
 end)
