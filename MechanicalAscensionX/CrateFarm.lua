@@ -17,7 +17,7 @@ local function getClosestCrate()
     local target, closest = nil, globalEnv.maxDistance
 
     for _, crate in next, crates:GetChildren() do
-        if (crate) then
+        if (crate and crate.Transparency == 1) then
             local distance = (humanoidRootPart.Position - crate.Position).Magnitude;
 
             if (distance < closest) then
@@ -54,7 +54,7 @@ runService.Stepped:Connect(function()
 
     for _, part in next, character:GetChildren() do
         if (part:IsA("BasePart")) then
-            part.CanCollide = not globalEnv.enabled;
+            part.CanCollide = not globalEnv.Enabled;
         end
     end
 end)
